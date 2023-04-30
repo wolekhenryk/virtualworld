@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 public class Main {
 
@@ -61,13 +62,21 @@ public class Main {
     frame.getContentPane().setBackground(MaterialColors.LIGHT_BLUE_50);
     frame.setVisible(true);
 
-    var wolf = new Wolf(new Pair<>(2, 4), world);
-    world.addOrganism(wolf);
+    world.addOrganism(Factory.create(Wolf.class, new Pair<>(2, 2), world));
+    world.addOrganism(Factory.create(Gazelle.class, new Pair<>(4, 4), world));
 
-    var sheep = new Sheep(new Pair<>(1, 3), world);
-    world.addOrganism(sheep);
+    var livings = world.getOrganisms();
 
-    var fox = new Fox(new Pair<>(4, 5), world);
-    world.addOrganism(fox);
+    for (int i = 0; i < 2; i++) {
+      var rand = new Random();
+      var newI = rand.nextInt(10);
+      var newJ = rand.nextInt(10);
+
+      var newPos = new Pair<>(newI, newJ);
+      var foundOrganism = livings.stream().filter(o -> o.getPosition().equals(newPos)).findFirst();
+
+      foundOrganism.ifPresentOrElse(
+          o -> {}, () -> world.addOrganism(Factory.create(Sheep.class, newPos, world)));
+    }
   }
 }

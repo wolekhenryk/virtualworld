@@ -81,7 +81,7 @@ public abstract class Organism {
 
   public void empower() {}
 
-  public boolean validCoords(int newI, int newJ) {
-    return newI >= 0 && newJ >= 0 && newI < world.getHeight() && newJ < world.getWidth();
+  public boolean invalidCoords(int newI, int newJ) {
+    return newI < 0 || newJ < 0 || newI >= world.getHeight() || newJ >= world.getWidth();
   }
 }

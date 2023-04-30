@@ -52,7 +52,7 @@ public class Fox extends Animal {
     var newI = currentI + deltaI;
     var newJ = currentJ + deltaJ;
 
-    while (!validCoords(newI, newJ)) {
+    while (invalidCoords(newI, newJ)) {
       randomNumber = randomShift();
 
       deltaI = dy[randomNumber];
