@@ -11,7 +11,7 @@ public abstract class Organism {
   public static int[] dx = {0, 1, 0, -1};
   public static int[] dy = {1, 0, -1, 0};
 
-  public abstract void make_turn();
+  public abstract void takeTurn();
 
   public abstract void collision(Organism other);
 

@@ -36,7 +36,10 @@ public class Main {
             world.setHeight(height);
             world.setWidth(width);
 
+            frame.dispose();
+
             try {
+              world.setGUI();
               world.display_world();
             } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
               return;
@@ -58,10 +61,13 @@ public class Main {
     frame.getContentPane().setBackground(MaterialColors.LIGHT_BLUE_50);
     frame.setVisible(true);
 
-    var wolf = new Wolf(new Pair<>(7, 9), world);
+    var wolf = new Wolf(new Pair<>(2, 4), world);
     world.addOrganism(wolf);
 
     var sheep = new Sheep(new Pair<>(1, 3), world);
     world.addOrganism(sheep);
+
+    var fox = new Fox(new Pair<>(4, 5), world);
+    world.addOrganism(fox);
   }
 }

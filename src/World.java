@@ -3,6 +3,8 @@ import mdlaf.utils.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -11,6 +13,12 @@ public class World {
   private ArrayList<Organism> organisms;
   private int width = 0;
   private int height = 0;
+  private JFrame frame;
+  private JPanel gridPanel;
+  private JPanel userInterface;
+  private JSplitPane splitPane;
+  private Font font;
+  private Font regularFont;
 
   public World() {
     organisms = new ArrayList<>();
@@ -24,16 +32,62 @@ public class World {
     this.height = height;
   }
 
-  public void make_turn() {}
+  public void setGUI() throws IOException, FontFormatException {
+    frame = new JFrame("University of sparkling water");
+
+    font = new Font("Segoe UI Emoji", Font.PLAIN, 72);
+    regularFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/Kanit-Regular.ttf"));
+
+    gridPanel = new JPanel(new GridLayout(height, width));
+
+    userInterface = new JPanel();
+    userInterface.setPreferredSize(new Dimension(width * 75, height * 75));
+    userInterface.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    userInterface.setBackground(MaterialColors.LIGHT_BLUE_50);
+    frame.add(gridPanel);
+
+    var mainLabel = new JLabel("Henryk Wołek 193399");
+    mainLabel.setFont(regularFont.deriveFont(Font.PLAIN, 24));
+
+    userInterface.add(mainLabel);
+
+    splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, gridPanel, userInterface);
+    splitPane.setResizeWeight(0);
+    splitPane.setDividerSize(0);
+    frame.add(splitPane);
+
+    frame.addKeyListener(
+        new KeyListener() {
+          @Override
+          public void keyTyped(KeyEvent e) {}
+
+          @Override
+          public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+              try {
+                gridPanel.removeAll();
+                make_turn();
+                display_world();
+              } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+                return;
+              }
+            }
+          }
+
+          @Override
+          public void keyReleased(KeyEvent e) {}
+        });
+  }
+
+  public void make_turn() {
+    for (var organism : organisms) {
+      organism.takeTurn();
+    }
+  }
 
   public void display_world()
       throws UnsupportedLookAndFeelException, IOException, FontFormatException {
     UIManager.setLookAndFeel(new MaterialLookAndFeel());
-
-    var frame = new JFrame("Hustlers University");
-
-    var gridPanel = new JPanel(new GridLayout(height, width));
-    Font font = new Font("Segoe UI Emoji", Font.PLAIN, 72);
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         var cellPanel = new JPanel();
@@ -66,10 +120,10 @@ public class World {
       }
     }
 
-    frame.add(gridPanel);
     frame.pack();
     frame.setLocationRelativeTo(null);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    frame.setDefaultCloseOperation(
+        JFrame.DISPOSE_ON_CLOSE); // close current frame when opening next
     frame.setVisible(true);
   }
 
