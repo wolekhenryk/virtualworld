@@ -81,7 +81,13 @@ public class Animal extends Organism {
     if (other instanceof Animal) {
       if (isSameSpecies(this, (Animal) other)) {
         reproduce();
-      } else if (other.getStrength() > this.getStrength()) {
+        return;
+      }
+      if (other instanceof Tortoise && this.getStrength() < 5) {
+        getWorld().message("Tortoise deflected attack!");
+        return;
+      }
+      if (other.getStrength() > this.getStrength()) {
         this.die();
         var prevPos = this.getPosition();
         other.setPosition(prevPos);
@@ -94,6 +100,8 @@ public class Animal extends Organism {
         getWorld()
             .message(this.getClass().getSimpleName() + " ate " + other.getClass().getSimpleName());
       }
+    } else if (other instanceof Plant) {
+      ((Plant) other).takeEffect(this);
     }
   }
 

@@ -65,9 +65,13 @@ public class Main {
     world.addOrganism(Factory.create(Wolf.class, new Pair<>(2, 2), world));
     world.addOrganism(Factory.create(Gazelle.class, new Pair<>(4, 4), world));
 
+    world.addOrganism(Factory.create(Tortoise.class, new Pair<>(3, 1), world));
+
+    world.addOrganism(Factory.create(Barszcz.class, new Pair<>(4, 3), world));
+
     var livings = world.getOrganisms();
 
-    for (int i = 0; i < 2; i++) {
+/*    for (int i = 0; i < 2; i++) {
       var rand = new Random();
       var newI = rand.nextInt(10);
       var newJ = rand.nextInt(10);
@@ -77,6 +81,6 @@ public class Main {
 
       foundOrganism.ifPresentOrElse(
           o -> {}, () -> world.addOrganism(Factory.create(Sheep.class, newPos, world)));
-    }
+    }*/
   }
 }

@@ -9,6 +9,18 @@ public final class Factory {
       return new Fox(position, world);
     } else if (className.equals(Gazelle.class.getSimpleName())) {
       return new Gazelle(position, world);
+    } else if (className.equals(Tortoise.class.getSimpleName())) {
+      return new Tortoise(position, world);
+    } else if (className.equals(Grass.class.getSimpleName())) {
+      return new Grass(position, world);
+    } else if (className.equals(Mlecz.class.getSimpleName())) {
+      return new Mlecz(position, world);
+    } else if (className.equals(Guarana.class.getSimpleName())) {
+      return new Guarana(position, world);
+    } else if (className.equals(Nightshade.class.getSimpleName())) {
+      return new Nightshade(position, world);
+    } else if (className.equals(Barszcz.class.getSimpleName())) {
+      return new Barszcz(position, world);
     }
 
     throw new IllegalArgumentException("Wrong arguments provided to function.");

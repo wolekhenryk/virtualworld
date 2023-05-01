@@ -53,18 +53,22 @@ public final class Gazelle extends Animal {
 
   @Override
   public void collision(Organism other) {
-    var rand = new Random();
-    var escapeChance = rand.nextInt(2);
+    if (other instanceof Plant) {
+      ((Plant) other).takeEffect(this);
+    } else {
+      var rand = new Random();
+      var escapeChance = rand.nextInt(2);
 
-    if (escapeChance == 1) {
-      var newSafePos = findFreeSpot();
-      if (!newSafePos.equals(new Pair<>(-1, -1))) {
-        getWorld().message("Gazela escaped the fight!");
-        setPosition(newSafePos);
-        return;
+      if (escapeChance == 1) {
+        var newSafePos = findFreeSpot();
+        if (!newSafePos.equals(new Pair<>(-1, -1))) {
+          getWorld().message("Gazela escaped the fight!");
+          setPosition(newSafePos);
+          return;
+        }
       }
+      super.collision(other);
     }
-    super.collision(other);
   }
 
   @Override
