@@ -4,9 +4,13 @@ import mdlaf.utils.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
@@ -21,7 +25,10 @@ public class World {
   private JTextArea logArea;
   private Font font;
   private Font regularFont;
+  private KeyListener arrowListener;
   Deque<String> logs;
+  private static final int attempts = 10;
+  private static final String filename = "file_java_game.txt";
 
   public World() {
     organisms = new ArrayList<>();
@@ -53,7 +60,7 @@ public class World {
     userInterface.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     var mainLabel = new JLabel("Henryk Wołek 193399");
-    mainLabel.setFont(regularFont.deriveFont(Font.PLAIN, 24));
+    mainLabel.setFont(regularFont.deriveFont(Font.PLAIN, 36));
     mainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
     userInterface.add(mainLabel);
 
@@ -65,6 +72,19 @@ public class World {
     saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
     userInterface.add(saveButton);
 
+    saveButton.addActionListener(
+        e -> {
+          try (var writer = new FileWriter(filename, false)) {
+            saveGameToFile(writer);
+            writer.close();
+            message("Game state has been successfully saved to file " + filename);
+            gridPanel.removeAll();
+            display_world();
+          } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+            return;
+          }
+        });
+
     userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
 
     var loadButton = new JButton("Load game");
@@ -72,6 +92,18 @@ public class World {
     loadButton.setFocusable(false);
     loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
     userInterface.add(loadButton);
+
+    loadButton.addActionListener(
+        e -> {
+          try (var reader = new FileReader(filename)) {
+            readFromFile(reader);
+            reader.close();
+            gridPanel.removeAll();
+            display_world();
+          } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+            return;
+          }
+        });
 
     userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
 
@@ -124,9 +156,30 @@ public class World {
     var worldMessage = "[WORLD] " + msg;
 
     this.logs.addLast(worldMessage);
-    if (this.logs.size() > 5) {
+    if (this.logs.size() > 10) {
       this.logs.removeFirst();
     }
+  }
+
+  public void placeOrganism(Class<? extends Organism> classType) {
+    var rand = new Random();
+
+    var newI = rand.nextInt(getHeight());
+    var newJ = rand.nextInt(getWidth());
+    var attemptCounter = 0;
+
+    while (!isFree(newI, newJ) && attemptCounter++ < attempts) {
+      newI = rand.nextInt(getHeight());
+      newJ = rand.nextInt(getWidth());
+    }
+
+    if (attemptCounter == attempts) return;
+
+    addOrganism(Factory.create(classType, new Pair<>(newI, newJ), this));
+  }
+
+  public boolean isFree(int i, int j) {
+    return organisms.stream().anyMatch(o -> o.getPosition().equals(new Pair<>(i, j)));
   }
 
   public void display_world()
@@ -192,4 +245,51 @@ public class World {
   public void addOrganism(Organism newOrganism) {
     organisms.add(newOrganism);
   }
+
+  public JFrame getFrame() {
+    return frame;
+  }
+
+  private void saveGameToFile(FileWriter writer) throws IOException {
+    writer.write(getWidth() + " " + getHeight() + "\n");
+    for (var o : organisms) {
+      if (o instanceof Human human) {
+        writer.write(
+            human.getClass().getSimpleName()
+                + " "
+                + human.getStrength()
+                + " "
+                + human.getInitiative()
+                + " "
+                + human.getAge()
+                + " "
+                + human.getPosition().first()
+                + " "
+                + human.getPosition().second()
+                + " "
+                + human.getSpecialAbilityCooldown()
+                + " "
+                + human.isAbilityActive()
+                + " "
+                + human.getSpecialAbilityDuration()
+                + "\n");
+      } else {
+        writer.write(
+            o.getClass().getSimpleName()
+                + " "
+                + o.getStrength()
+                + " "
+                + o.getInitiative()
+                + " "
+                + o.getAge()
+                + " "
+                + o.getPosition().first()
+                + " "
+                + o.getPosition().second()
+                + "\n");
+      }
+    }
+  }
+
+  private void readFromFile(FileReader reader) throws IOException {}
 }

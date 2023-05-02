@@ -17,7 +17,7 @@ public final class Guarana extends Plant {
 
   @Override
   public void display(String content, JPanel panel, JLabel label) {
-    content = "\uD83C\uDF3E"; // Guarana emoji
+    content = "\uD83C\uDF31"; // Guarana emoji
     panel.setBackground(new Color(139, 69, 19)); // orange
     label.setForeground(new Color(255, 140, 0)); // dark yellow
     label.setText(content);

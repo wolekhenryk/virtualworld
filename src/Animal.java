@@ -19,9 +19,8 @@ public class Animal extends Organism {
       if (invalidCoords(newI, newJ)) continue;
 
       var newPos = new Pair<>(newI, newJ);
-      var foundOrganism = livings.stream().filter(o -> o.getPosition().equals(newPos)).findFirst();
 
-      if (foundOrganism.isEmpty()) return newPos;
+      if (livings.stream().anyMatch(o -> o.getPosition().equals(newPos))) return newPos;
     }
     return new Pair<>(-1, -1);
   }
@@ -70,6 +69,7 @@ public class Animal extends Organism {
   }
 
   private void reproduce() {
+    if (this instanceof Human) return;
     getWorld().message("Reproducing...");
     var newPos = findFreeSpot();
     if (newPos.equals(new Pair<>(-1, -1))) return;

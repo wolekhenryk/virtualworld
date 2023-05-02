@@ -21,6 +21,8 @@ public final class Factory {
       return new Nightshade(position, world);
     } else if (className.equals(Barszcz.class.getSimpleName())) {
       return new Barszcz(position, world);
+    } else if (className.equals(Human.class.getSimpleName())) {
+      return new Human(position, world);
     }
 
     throw new IllegalArgumentException("Wrong arguments provided to function.");

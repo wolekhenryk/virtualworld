@@ -28,23 +28,35 @@ public class Main {
     var submitButton = new JButton("Submit");
 
     submitButton.addActionListener(
-        new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-            int width = Integer.parseInt(widthField.getText());
-            int height = Integer.parseInt(heightField.getText());
+        e -> {
+          int width = Integer.parseInt(widthField.getText());
+          int height = Integer.parseInt(heightField.getText());
 
-            world.setHeight(height);
-            world.setWidth(width);
+          world.setHeight(height);
+          world.setWidth(width);
 
-            frame.dispose();
+          frame.dispose();
 
-            try {
-              world.setGUI();
-              world.display_world();
-            } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
-              return;
-            }
+          try {
+            world.setGUI();
+
+            world.placeOrganism(Barszcz.class);
+            world.placeOrganism(Fox.class);
+            world.placeOrganism(Gazelle.class);
+            world.placeOrganism(Grass.class);
+            world.placeOrganism(Grass.class);
+            world.placeOrganism(Guarana.class);
+            world.placeOrganism(Guarana.class);
+            world.placeOrganism(Mlecz.class);
+            world.placeOrganism(Nightshade.class);
+            world.placeOrganism(Sheep.class);
+            world.placeOrganism(Tortoise.class);
+            world.placeOrganism(Wolf.class);
+            world.placeOrganism(Human.class);
+
+            world.display_world();
+          } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+            return;
           }
         });
 
@@ -61,26 +73,5 @@ public class Main {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.getContentPane().setBackground(MaterialColors.LIGHT_BLUE_50);
     frame.setVisible(true);
-
-    world.addOrganism(Factory.create(Wolf.class, new Pair<>(2, 2), world));
-    world.addOrganism(Factory.create(Gazelle.class, new Pair<>(4, 4), world));
-
-    world.addOrganism(Factory.create(Tortoise.class, new Pair<>(3, 1), world));
-
-    world.addOrganism(Factory.create(Barszcz.class, new Pair<>(4, 3), world));
-
-    var livings = world.getOrganisms();
-
-/*    for (int i = 0; i < 2; i++) {
-      var rand = new Random();
-      var newI = rand.nextInt(10);
-      var newJ = rand.nextInt(10);
-
-      var newPos = new Pair<>(newI, newJ);
-      var foundOrganism = livings.stream().filter(o -> o.getPosition().equals(newPos)).findFirst();
-
-      foundOrganism.ifPresentOrElse(
-          o -> {}, () -> world.addOrganism(Factory.create(Sheep.class, newPos, world)));
-    }*/
   }
 }
