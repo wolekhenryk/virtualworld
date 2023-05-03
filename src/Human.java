@@ -89,6 +89,23 @@ public final class Human extends Animal {
   private void castSpecialAbility() {
     this.specialAbilityDuration--;
     getWorld().message("Ability will last for " + specialAbilityDuration + " more rounds");
+
+    var livings = getWorld().getOrganisms();
+    var currI = getPosition().first();
+    var currJ = getPosition().second();
+
+    for (int i = 0; i < 4; i++) {
+      var newI = currI + dy[i];
+      var newJ = currJ + dx[i];
+
+      if (invalidCoords(newI, newJ)) continue;
+
+      var newPos = new Pair<>(newI, newJ);
+
+      var foundOrganism = livings.stream().filter(o -> o.getPosition().equals(newPos)).findFirst();
+
+      foundOrganism.ifPresent(Organism::die);
+    }
   }
 
   public void activateSpecialAbility() {
