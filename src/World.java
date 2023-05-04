@@ -4,14 +4,8 @@ import mdlaf.utils.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.awt.event.*;
+import java.io.*;
 import java.util.*;
 
 public class World {
@@ -95,9 +89,9 @@ public class World {
 
     loadButton.addActionListener(
         e -> {
-          try (var reader = new FileReader(filename)) {
+          try {
+            var reader = new File(filename);
             readFromFile(reader);
-            reader.close();
             gridPanel.removeAll();
             display_world();
           } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
@@ -211,6 +205,36 @@ public class World {
           organism.display(cellContent, cellPanel, cellLabel);
         } else {
           cellLabel.setText(cellContent);
+          cellPanel.addMouseListener(
+              new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                  var options = Factory.getClasses();
+                  var comboBox = new JComboBox<>(options);
+                  comboBox.setPreferredSize(new Dimension(100, 30));
+
+                  int option =
+                      JOptionPane.showOptionDialog(
+                          null,
+                          comboBox,
+                          "Select organism to place at this field",
+                          JOptionPane.DEFAULT_OPTION,
+                          JOptionPane.PLAIN_MESSAGE,
+                          null,
+                          null,
+                          null);
+
+                  if (option == JOptionPane.OK_OPTION) {
+                    var selectedOrganism = (String) comboBox.getSelectedItem();
+                    if (selectedOrganism != null) {
+                      var newOrganism = Factory.create(selectedOrganism, newPos, World.this);
+                      newOrganism.display(cellContent, cellPanel, cellLabel);
+                      addOrganism(newOrganism);
+                      message("A new " + selectedOrganism + " was just added by a player!");
+                    }
+                  }
+                }
+              });
         }
 
         cellLabel.setPreferredSize(new Dimension(75, 75));
@@ -291,5 +315,50 @@ public class World {
     }
   }
 
-  private void readFromFile(FileReader reader) throws IOException {}
+  private void readFromFile(File reader) throws IOException {
+    organisms.clear();
+    var scanner = new Scanner(reader);
+
+    String dimensions = scanner.nextLine();
+    var dimensionScanner = new Scanner(dimensions);
+
+    int worldWidth = dimensionScanner.nextInt();
+    int worldHeight = dimensionScanner.nextInt();
+
+    setWidth(worldWidth);
+    setHeight(worldHeight);
+
+    dimensionScanner.close();
+
+    while (scanner.hasNextLine()) {
+      String line = scanner.nextLine();
+      var lineScanner = new Scanner(line);
+
+      String className = lineScanner.next();
+      int strength = lineScanner.nextInt();
+      int initiative = lineScanner.nextInt();
+      int age = lineScanner.nextInt();
+      int iPos = lineScanner.nextInt();
+      int jPos = lineScanner.nextInt();
+
+      var organism = Factory.create(className, new Pair<>(iPos, jPos), this);
+      organism.setStrength(strength);
+      organism.setInitiative(initiative);
+      organism.setAge(age);
+
+      if (organism instanceof Human) {
+        int cooldown = lineScanner.nextInt();
+        boolean isActive = lineScanner.nextBoolean();
+        int duration = lineScanner.nextInt();
+
+        ((Human) organism).setSpecialAbilityCooldown(cooldown);
+        if (isActive) ((Human) organism).activateSpecialAbility();
+        ((Human) organism).setSpecialAbilityDuration(duration);
+      }
+
+      organisms.add(organism);
+    }
+
+    scanner.close();
+  }
 }

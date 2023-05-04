@@ -1,4 +1,17 @@
 public final class Factory {
+  private static final String[] classes = {
+    "Sheep",
+    "Wolf",
+    "Fox",
+    "Gazelle",
+    "Tortoise",
+    "Grass",
+    "Mlecz",
+    "Guarana",
+    "Nightshade",
+    "Barszcz"
+  };
+
   public static Organism create(String className, Pair<Integer, Integer> position, World world)
       throws IllegalArgumentException {
     if (className.equals(Sheep.class.getSimpleName())) {
@@ -31,5 +44,9 @@ public final class Factory {
   public static Organism create(
       Class<? extends Organism> classType, Pair<Integer, Integer> position, World world) {
     return create(classType.getSimpleName(), position, world);
+  }
+
+  public static String[] getClasses() {
+    return classes;
   }
 }
