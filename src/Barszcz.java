@@ -45,6 +45,11 @@ public class Barszcz extends Plant {
   }
 
   @Override
+  public void display(Graphics g, int x, int y) {
+    g.drawString("\uD83C\uDF35", x, y);
+  }
+
+  @Override
   void takeEffect(Animal other) {
     getWorld().message("Barszcz just poisoned " + other.getClass().getSimpleName() + " to death");
     other.die();

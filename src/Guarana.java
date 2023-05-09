@@ -24,6 +24,11 @@ public final class Guarana extends Plant {
   }
 
   @Override
+  public void display(Graphics g, int x, int y) {
+    g.drawString("\uD83C\uDF31", x, y);
+  }
+
+  @Override
   void takeEffect(Animal other) {
     other.setStrength(other.getStrength() + GUARANA_POWER);
     getWorld()

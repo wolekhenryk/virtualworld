@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.util.Random;
 
 public abstract class Organism {
@@ -16,6 +17,8 @@ public abstract class Organism {
   public abstract void collision(Organism other);
 
   public abstract void display(String content, JPanel panel, JLabel label);
+
+  public abstract void display(Graphics g, int x, int y);
 
   public void setStrength(int strength) {
     this.strength = strength;

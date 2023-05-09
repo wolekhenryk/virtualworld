@@ -1,0 +1,200 @@
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+
+import mdlaf.MaterialLookAndFeel;
+import mdlaf.components.button.MaterialButtonUI;
+import mdlaf.utils.*;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.*;
+import java.util.*;
+
+public class WorldHexImpl extends World {
+  private int numRows;
+  private int numCols;
+  private final int SIZE = CELL_SIZE / 2;
+  private final int HEX_SPACING = 10;
+
+  @Override
+  public void setGUI() throws IOException, FontFormatException {
+    frame = new JFrame("University of sparkling water");
+
+    font = new Font("Segoe UI Emoji", Font.PLAIN, 72);
+    regularFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/Kanit-Regular.ttf"));
+
+    gridPanel =
+        new JPanel() {
+          @Override
+          protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            for (int i = 0; i < height; i++) {
+              for (int j = 0; j < width; j++) {
+                int x =
+                    SIZE
+                        + j * (SIZE * 2 - HEX_SPACING)
+                        + (i % 2 == 0 ? HEX_SPACING : SIZE + HEX_SPACING / 2);
+                int y = SIZE + i * (SIZE * 2 - HEX_SPACING * 2) + SIZE / 2;
+
+                Polygon hex = new Polygon();
+                for (int k = 0; k < 6; k++) {
+                  int angleDeg = 30 + 60 * k;
+                  double angleRad = Math.PI / 180 * angleDeg;
+                  int x_i = (int) (x + SIZE * Math.cos(angleRad));
+                  int y_i = (int) (y + SIZE * Math.sin(angleRad));
+                  hex.addPoint(x_i, y_i);
+                }
+                g.setColor(Color.WHITE);
+                g.fillPolygon(hex);
+                g.setColor(Color.BLACK);
+                g.drawPolygon(hex);
+                g.setFont(font.deriveFont(Font.PLAIN, SIZE));
+
+                var newPos = new Pair<>(i, j);
+                var foundOrganism =
+                    organisms.stream().filter(o -> o.getPosition().equals(newPos)).findFirst();
+
+                foundOrganism.ifPresent(
+                    o -> o.display(g, x - SIZE / 2 - SIZE / 6, y + SIZE / 2 - SIZE / 4));
+              }
+            }
+          }
+        };
+    frame.add(gridPanel);
+
+    frame.setSize(new Dimension(width * CELL_SIZE + SIZE / 4, height * CELL_SIZE));
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.setVisible(true);
+
+    /*userInterface = new JPanel();
+    userInterface.setPreferredSize(new Dimension(width * CELL_SIZE, height * CELL_SIZE));
+    userInterface.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    userInterface.setBackground(MaterialColors.LIGHT_BLUE_50);
+    userInterface.setLayout(new BoxLayout(userInterface, BoxLayout.Y_AXIS));
+    userInterface.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    var mainLabel = new JLabel("Henryk Wołek 193399");
+    mainLabel.setFont(regularFont.deriveFont(Font.PLAIN, 36));
+    mainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    userInterface.add(mainLabel);
+
+    userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
+
+    var saveButton = new JButton("Save game");
+    saveButton.setUI(new MaterialButtonUI());
+    saveButton.setFocusable(false);
+    saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    userInterface.add(saveButton);
+
+    saveButton.addActionListener(
+        e -> {
+          try (var writer = new FileWriter(FILENAME, false)) {
+            saveGameToFile(writer);
+            writer.close();
+            message("Game state has been successfully saved to file " + FILENAME);
+            gridPanel.removeAll();
+            display_world();
+          } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+            return;
+          }
+        });
+
+    userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
+
+    var loadButton = new JButton("Load game");
+    loadButton.setUI(new MaterialButtonUI());
+    loadButton.setFocusable(false);
+    loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    userInterface.add(loadButton);
+
+    loadButton.addActionListener(
+        e -> {
+          try {
+            var reader = new File(FILENAME);
+            readFromFile(reader);
+            gridPanel.removeAll();
+            display_world();
+          } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+            return;
+          }
+        });
+
+    userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
+
+    logArea = new JTextArea();
+    logArea.setEditable(false);
+    logArea.setFocusable(false);
+    logArea.setLineWrap(true);
+    logArea.setPreferredSize(new Dimension(width * 75, height * 30));
+    logArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+    userInterface.add(logArea);
+
+    splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, gridPanel, userInterface);
+    splitPane.setResizeWeight(0);
+    splitPane.setDividerSize(0);
+    frame.add(splitPane);
+
+    frame.addKeyListener(
+        new KeyListener() {
+          @Override
+          public void keyTyped(KeyEvent e) {}
+
+          @Override
+          public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+              try {
+                gridPanel.removeAll();
+                make_turn();
+                display_world();
+              } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+                return;
+              }
+            }
+          }
+
+          @Override
+          public void keyReleased(KeyEvent e) {}
+        });*/
+  }
+
+  @Override
+  public void placeOrganism(Class<? extends Organism> classType) {
+    var rand = new Random();
+
+    var newI = rand.nextInt(getHeight());
+    var newJ = rand.nextInt(getWidth());
+    var attemptCounter = 0;
+
+    while (!isFree(newI, newJ) && attemptCounter++ < ATTEMPTS) {
+      newI = rand.nextInt(getHeight());
+      newJ = rand.nextInt(getWidth());
+    }
+
+    if (attemptCounter == ATTEMPTS) return;
+
+    addOrganism(Factory.create(classType, new Pair<>(newI, newJ), this));
+  }
+
+  @Override
+  public boolean isFree(int i, int j) {
+    return organisms.stream().anyMatch(o -> o.getPosition().equals(new Pair<>(i, j)));
+  }
+
+  @Override
+  public void display_world()
+      throws UnsupportedLookAndFeelException, IOException, FontFormatException {
+    UIManager.setLookAndFeel(new MaterialLookAndFeel());
+
+    /*    frame.pack();
+
+    */
+  }
+
+  @Override
+  public void saveGameToFile(FileWriter writer) throws IOException {}
+
+  @Override
+  public void readFromFile(File reader) throws IOException {}
+}

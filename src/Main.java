@@ -13,7 +13,7 @@ public class Main {
 
   public static void main(String[] args)
       throws UnsupportedLookAndFeelException, IOException, FontFormatException {
-    var world = new World();
+    var world = new WorldHexImpl();
     UIManager.setLookAndFeel(new MaterialLookAndFeel());
 
     var frame = new JFrame("Henryk Wolek 193399");

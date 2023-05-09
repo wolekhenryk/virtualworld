@@ -17,4 +17,9 @@ public final class Wolf extends Animal {
         label.setForeground(Color.WHITE);
         label.setText(content);
     }
+
+    @Override
+    public void display(Graphics g, int x, int y) {
+        g.drawString("\ud83d\udc3a", x, y);
+    }
 }

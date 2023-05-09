@@ -23,6 +23,11 @@ public final class Grass extends Plant {
   }
 
   @Override
+  public void display(Graphics g, int x, int y) {
+    g.drawString("\uD83C\uDF3A", x, y);
+  }
+
+  @Override
   void takeEffect(Animal other) {
     getWorld().message("Grass was eaten");
     other.setPosition(this.getPosition());

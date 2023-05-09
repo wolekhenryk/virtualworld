@@ -19,6 +19,11 @@ public class Fox extends Animal {
     label.setText(content);
   }
 
+  @Override
+  public void display(Graphics g, int x, int y) {
+    g.drawString("\uD83E\uDD8A", x, y);
+  }
+
   private boolean safe_movement(int newI, int newJ) {
     var livings = getWorld().getOrganisms();
     var posAsPair = new Pair<>(newI, newJ);

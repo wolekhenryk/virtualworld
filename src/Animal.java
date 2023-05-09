@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 public class Animal extends Organism {
   public Animal(Pair<Integer, Integer> position, World world) {
@@ -107,4 +108,9 @@ public class Animal extends Organism {
 
   @Override
   public void display(String content, JPanel panel, JLabel label) {}
+
+  @Override
+  public void display(Graphics g, int x, int y) {
+
+  }
 }

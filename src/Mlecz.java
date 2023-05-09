@@ -24,6 +24,11 @@ public final class Mlecz extends Plant {
   }
 
   @Override
+  public void display(Graphics g, int x, int y) {
+    g.drawString("\uD83C\uDF3B", x, y);
+  }
+
+  @Override
   void takeEffect(Animal other) {
     getWorld().message("Mlecz was eaten");
     other.setPosition(this.getPosition());

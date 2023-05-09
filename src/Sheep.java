@@ -18,4 +18,9 @@ public final class Sheep extends Animal {
     label.setForeground(Color.DARK_GRAY);
     label.setText(content);
   }
+
+  @Override
+  public void display(Graphics g, int x, int y) {
+    g.drawString("\uD83D\uDC11", x, y);
+  }
 }

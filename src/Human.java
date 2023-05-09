@@ -27,6 +27,11 @@ public final class Human extends Animal {
   }
 
   @Override
+  public void display(Graphics g, int x, int y) {
+    g.drawString("\ud83e\uddd9", x, y);
+  }
+
+  @Override
   public void takeTurn() {
     listener =
         new KeyListener() {

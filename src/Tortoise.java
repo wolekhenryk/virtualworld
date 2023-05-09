@@ -24,4 +24,9 @@ public final class Tortoise extends Animal {
     label.setForeground(new Color(51, 51, 51)); // Dark gray
     label.setText(content);
   }
+
+  @Override
+  public void display(Graphics g, int x, int y) {
+    g.drawString("\ud83d\udc22", x, y);
+  }
 }

@@ -78,4 +78,9 @@ public final class Gazelle extends Animal {
     label.setForeground(Color.WHITE);
     label.setText(content);
   }
+
+  @Override
+  public void display(Graphics g, int x, int y) {
+    g.drawString("\uD83E\uDD8C", x, y);
+  }
 }
