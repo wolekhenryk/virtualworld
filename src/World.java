@@ -21,8 +21,10 @@ public class World {
   private Font regularFont;
   private KeyListener arrowListener;
   Deque<String> logs;
-  private static final int attempts = 10;
-  private static final String filename = "file_java_game.txt";
+  private static final int ATTEMPTS = 10;
+  private static final String FILENAME = "file_java_game.txt";
+
+  private static final int CELL_SIZE = 75;
 
   public World() {
     organisms = new ArrayList<>();
@@ -68,10 +70,10 @@ public class World {
 
     saveButton.addActionListener(
         e -> {
-          try (var writer = new FileWriter(filename, false)) {
+          try (var writer = new FileWriter(FILENAME, false)) {
             saveGameToFile(writer);
             writer.close();
-            message("Game state has been successfully saved to file " + filename);
+            message("Game state has been successfully saved to file " + FILENAME);
             gridPanel.removeAll();
             display_world();
           } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
@@ -90,7 +92,7 @@ public class World {
     loadButton.addActionListener(
         e -> {
           try {
-            var reader = new File(filename);
+            var reader = new File(FILENAME);
             readFromFile(reader);
             gridPanel.removeAll();
             display_world();
@@ -162,12 +164,12 @@ public class World {
     var newJ = rand.nextInt(getWidth());
     var attemptCounter = 0;
 
-    while (!isFree(newI, newJ) && attemptCounter++ < attempts) {
+    while (!isFree(newI, newJ) && attemptCounter++ < ATTEMPTS) {
       newI = rand.nextInt(getHeight());
       newJ = rand.nextInt(getWidth());
     }
 
-    if (attemptCounter == attempts) return;
+    if (attemptCounter == ATTEMPTS) return;
 
     addOrganism(Factory.create(classType, new Pair<>(newI, newJ), this));
   }
@@ -188,7 +190,7 @@ public class World {
     for (int i = 0; i < height; i++) {
       for (int j = 0; j < width; j++) {
         var cellPanel = new JPanel();
-        cellPanel.setPreferredSize(new Dimension(75, 75));
+        cellPanel.setPreferredSize(new Dimension(CELL_SIZE, CELL_SIZE));
         cellPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         cellPanel.setBackground(MaterialColors.LIGHT_BLUE_50);
 

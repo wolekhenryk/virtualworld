@@ -2,13 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Fox extends Animal {
-  private static final int foxStrength = 3;
-  private static final int foxInitiative = 7;
+  private static final int FOX_STRENGTH = 3;
+  private static final int FOX_INITIATIVE = 7;
 
   public Fox(Pair<Integer, Integer> position, World world) {
     super(position, world);
-    this.setInitiative(foxInitiative);
-    this.setStrength(foxStrength);
+    this.setInitiative(FOX_INITIATIVE);
+    this.setStrength(FOX_STRENGTH);
   }
 
   @Override

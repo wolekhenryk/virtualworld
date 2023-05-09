@@ -2,12 +2,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public final class Wolf extends Animal {
-    private static final int wolfStrength = 9;
-    private static final int wolfInitiative = 5;
+    private static final int WOLF_STRENGTH = 9;
+    private static final int WOLF_INITIATIVE = 5;
     public Wolf(Pair<Integer, Integer> position, World world) {
         super(position, world);
-        this.setInitiative(wolfInitiative);
-        this.setStrength(wolfStrength);
+        this.setInitiative(WOLF_INITIATIVE);
+        this.setStrength(WOLF_STRENGTH);
     }
 
     @Override

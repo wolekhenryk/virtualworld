@@ -2,19 +2,19 @@ import javax.swing.*;
 import java.awt.*;
 
 public final class Tortoise extends Animal {
-  private static final int tortoiseStrength = 2;
-  private static final int tortoiseInitiative = 1;
-  private static final int movementChance = 3;
+  private static final int TORTOISE_STRENGTH = 2;
+  private static final int TORTOISE_INITIATIVE = 1;
+  private static final int MOVEMENT_CHANCE = 3;
 
   public Tortoise(Pair<Integer, Integer> position, World world) {
     super(position, world);
-    this.setInitiative(tortoiseInitiative);
-    this.setStrength(tortoiseStrength);
+    this.setInitiative(TORTOISE_INITIATIVE);
+    this.setStrength(TORTOISE_STRENGTH);
   }
 
   @Override
   public void takeTurn() {
-    if (randomShift() >= movementChance) super.takeTurn();
+    if (randomShift() >= MOVEMENT_CHANCE) super.takeTurn();
   }
 
   @Override

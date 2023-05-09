@@ -2,13 +2,13 @@ import javax.swing.*;
 import java.awt.*;
 
 public final class Sheep extends Animal {
-  private static final int sheepStrength = 4;
-  private static final int sheepInitiative = 4;
+  private static final int SHEEP_STRENGTH = 4;
+  private static final int SHEEP_INITIATIVE = 4;
 
   public Sheep(Pair<Integer, Integer> position, World world) {
     super(position, world);
-    this.setInitiative(sheepInitiative);
-    this.setStrength(sheepStrength);
+    this.setInitiative(SHEEP_INITIATIVE);
+    this.setStrength(SHEEP_STRENGTH);
   }
 
   @Override

@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public final class Grass extends Plant {
-  private static final int grass_spread_chance = 5; // chance of 5%
+  private static final int GRASS_SPREAD_CHANCE = 5; // chance of 5%
 
   public Grass(Pair<Integer, Integer> position, World world) {
     super(position, world);
@@ -11,7 +11,7 @@ public final class Grass extends Plant {
 
   @Override
   public void takeTurn() {
-    spread(grass_spread_chance);
+    spread(GRASS_SPREAD_CHANCE);
   }
 
   @Override

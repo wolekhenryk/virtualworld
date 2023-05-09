@@ -1,5 +1,5 @@
 public final class Factory {
-  private static final String[] classes = {
+  private static final String[] CLASSES = {
     "Sheep",
     "Wolf",
     "Fox",
@@ -47,6 +47,6 @@ public final class Factory {
   }
 
   public static String[] getClasses() {
-    return classes;
+    return CLASSES;
   }
 }

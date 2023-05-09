@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Barszcz extends Plant {
-  private static final int barszczSpreadChance = 2;
+  private static final int BARSZCZ_SPREAD_CHANCE = 2;
 
   public Barszcz(Pair<Integer, Integer> position, World world) {
     super(position, world);
@@ -33,7 +33,7 @@ public class Barszcz extends Plant {
         getWorld().message("Barszcz killed some animals");
       }
     }
-    spread(barszczSpreadChance);
+    spread(BARSZCZ_SPREAD_CHANCE);
   }
 
   @Override

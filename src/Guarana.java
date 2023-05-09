@@ -2,8 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public final class Guarana extends Plant {
-  private static final int guaranaSpreadChance = 6;
-  private static final int guaranaPower = 3;
+  private static final int GUARANA_SPREAD_CHANCE = 6;
+  private static final int GUARANA_POWER = 3;
 
   public Guarana(Pair<Integer, Integer> position, World world) {
     super(position, world);
@@ -12,7 +12,7 @@ public final class Guarana extends Plant {
 
   @Override
   public void takeTurn() {
-    spread(guaranaSpreadChance);
+    spread(GUARANA_SPREAD_CHANCE);
   }
 
   @Override
@@ -25,7 +25,7 @@ public final class Guarana extends Plant {
 
   @Override
   void takeEffect(Animal other) {
-    other.setStrength(other.getStrength() + guaranaPower);
+    other.setStrength(other.getStrength() + GUARANA_POWER);
     getWorld()
         .message(
             other.getClass().getSimpleName()

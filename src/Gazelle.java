@@ -3,13 +3,13 @@ import java.awt.*;
 import java.util.Random;
 
 public final class Gazelle extends Animal {
-  private static final int gazelleStrength = 4;
-  private static final int gazelleInitiative = 4;
+  private static final int GAZELLE_STRENGTH = 4;
+  private static final int GAZELLE_INITIATIVE = 4;
 
   public Gazelle(Pair<Integer, Integer> position, World world) {
     super(position, world);
-    this.setInitiative(gazelleInitiative);
-    this.setStrength(gazelleStrength);
+    this.setInitiative(GAZELLE_INITIATIVE);
+    this.setStrength(GAZELLE_STRENGTH);
   }
 
   @Override

@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Nightshade extends Plant {
-    private static final int nightshadeSpreadChance = 3;
+    private static final int NIGHTSHADE_SPREAD_CHANCE = 3;
   public Nightshade(Pair<Integer, Integer> position, World world) {
     super(position, world);
     this.setStrength(99);
@@ -10,7 +10,7 @@ public class Nightshade extends Plant {
 
     @Override
     public void takeTurn() {
-        spread(nightshadeSpreadChance);
+        spread(NIGHTSHADE_SPREAD_CHANCE);
     }
 
     @Override

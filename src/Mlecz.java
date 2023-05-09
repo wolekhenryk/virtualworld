@@ -2,8 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public final class Mlecz extends Plant {
-  private static final int mlecz_spread_chance = 2;
-  private static final int attempts = 3;
+  private static final int MLECZ_SPREAD_CHANCE = 2;
+  private static final int ATTEMPTS = 3;
 
   public Mlecz(Pair<Integer, Integer> position, World world) {
     super(position, world);
@@ -12,7 +12,7 @@ public final class Mlecz extends Plant {
 
   @Override
   public void takeTurn() {
-    for (int i = 0; i < attempts; i++) spread(mlecz_spread_chance);
+    for (int i = 0; i < ATTEMPTS; i++) spread(MLECZ_SPREAD_CHANCE);
   }
 
   @Override

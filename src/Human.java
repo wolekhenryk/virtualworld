@@ -1,13 +1,11 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.concurrent.Semaphore;
 
 public final class Human extends Animal {
-  private static final int humanStrength = 5;
-  private static final int humanInitiative = 4;
+  private static final int HUMAN_STRENGTH = 5;
+  private static final int HUMAN_INITIATIVE = 4;
   boolean hasActivatedKeyListener = false;
   KeyListener listener;
   private int specialAbilityDuration;
@@ -16,8 +14,8 @@ public final class Human extends Animal {
 
   public Human(Pair<Integer, Integer> position, World world) {
     super(position, world);
-    this.setInitiative(humanInitiative);
-    this.setStrength(humanStrength);
+    this.setInitiative(HUMAN_INITIATIVE);
+    this.setStrength(HUMAN_STRENGTH);
   }
 
   @Override
