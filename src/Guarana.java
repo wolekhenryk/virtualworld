@@ -24,7 +24,11 @@ public final class Guarana extends Plant {
   }
 
   @Override
-  public void display(Graphics g, int x, int y) {
+  public void display(Graphics g, int x, int y, Polygon p) {
+    g.setColor(new Color(139, 69, 19));
+    g.fillPolygon(p);
+    g.setColor(new Color(255, 140, 0));
+    g.drawPolygon(p);
     g.drawString("\uD83C\uDF31", x, y);
   }
 

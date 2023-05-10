@@ -20,7 +20,11 @@ public final class Sheep extends Animal {
   }
 
   @Override
-  public void display(Graphics g, int x, int y) {
+  public void display(Graphics g, int x, int y, Polygon p) {
+    g.setColor(Color.LIGHT_GRAY);
+    g.fillPolygon(p);
+    g.setColor(Color.DARK_GRAY);
+    g.drawPolygon(p);
     g.drawString("\uD83D\uDC11", x, y);
   }
 }

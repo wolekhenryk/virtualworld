@@ -27,7 +27,11 @@ public final class Human extends Animal {
   }
 
   @Override
-  public void display(Graphics g, int x, int y) {
+  public void display(Graphics g, int x, int y, Polygon p) {
+    g.setColor(new Color(255, 255, 255));
+    g.fillPolygon(p);
+    g.setColor(new Color(34, 45, 119));
+    g.drawPolygon(p);
     g.drawString("\ud83e\uddd9", x, y);
   }
 

@@ -45,5 +45,5 @@ public class Plant extends Organism {
   public void display(String content, JPanel panel, JLabel label) {}
 
   @Override
-  public void display(Graphics g, int x, int y) {}
+  public void display(Graphics g, int x, int y, Polygon p) {}
 }

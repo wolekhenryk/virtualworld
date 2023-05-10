@@ -23,7 +23,11 @@ public final class Grass extends Plant {
   }
 
   @Override
-  public void display(Graphics g, int x, int y) {
+  public void display(Graphics g, int x, int y, Polygon p) {
+    g.setColor(new Color(34, 139, 34));
+    g.fillPolygon(p);
+    g.setColor(new Color(255, 255, 255));
+    g.drawPolygon(p);
     g.drawString("\uD83C\uDF3A", x, y);
   }
 

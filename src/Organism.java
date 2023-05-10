@@ -18,7 +18,7 @@ public abstract class Organism {
 
   public abstract void display(String content, JPanel panel, JLabel label);
 
-  public abstract void display(Graphics g, int x, int y);
+  public abstract void display(Graphics g, int x, int y, Polygon p);
 
   public void setStrength(int strength) {
     this.strength = strength;

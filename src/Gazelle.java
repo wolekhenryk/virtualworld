@@ -80,7 +80,11 @@ public final class Gazelle extends Animal {
   }
 
   @Override
-  public void display(Graphics g, int x, int y) {
+  public void display(Graphics g, int x, int y, Polygon p) {
+    g.setColor(new Color(160, 82, 45));
+    g.fillPolygon(p);
+    g.setColor(Color.WHITE);
+    g.drawPolygon(p);
     g.drawString("\uD83E\uDD8C", x, y);
   }
 }

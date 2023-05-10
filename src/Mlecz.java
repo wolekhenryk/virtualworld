@@ -24,7 +24,11 @@ public final class Mlecz extends Plant {
   }
 
   @Override
-  public void display(Graphics g, int x, int y) {
+  public void display(Graphics g, int x, int y, Polygon p) {
+    g.setColor(new Color(255, 255, 0));
+    g.fillPolygon(p);
+    g.setColor(new Color(0, 0, 0));
+    g.drawPolygon(p);
     g.drawString("\uD83C\uDF3B", x, y);
   }
 

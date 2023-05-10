@@ -20,7 +20,11 @@ public class Fox extends Animal {
   }
 
   @Override
-  public void display(Graphics g, int x, int y) {
+  public void display(Graphics g, int x, int y, Polygon p) {
+    g.setColor(new Color(255, 170, 0));
+    g.fillPolygon(p);
+    g.setColor(new Color(119, 70, 34));
+    g.drawPolygon(p);
     g.drawString("\uD83E\uDD8A", x, y);
   }
 

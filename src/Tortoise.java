@@ -26,7 +26,11 @@ public final class Tortoise extends Animal {
   }
 
   @Override
-  public void display(Graphics g, int x, int y) {
+  public void display(Graphics g, int x, int y, Polygon p) {
+    g.setColor(new Color(155, 204, 102));
+    g.fillPolygon(p);
+    g.setColor(new Color(51, 51, 51));
+    g.drawPolygon(p);
     g.drawString("\ud83d\udc22", x, y);
   }
 }

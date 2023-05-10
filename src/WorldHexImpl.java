@@ -46,27 +46,99 @@ public class WorldHexImpl extends World {
                   int y_i = (int) (y + SIZE * Math.sin(angleRad));
                   hex.addPoint(x_i, y_i);
                 }
-                g.setColor(Color.WHITE);
-                g.fillPolygon(hex);
-                g.setColor(Color.BLACK);
-                g.drawPolygon(hex);
-                g.setFont(font.deriveFont(Font.PLAIN, SIZE));
+
+                g.setFont(font.deriveFont(Font.PLAIN, 36));
 
                 var newPos = new Pair<>(i, j);
                 var foundOrganism =
                     organisms.stream().filter(o -> o.getPosition().equals(newPos)).findFirst();
 
-                foundOrganism.ifPresent(
-                    o -> o.display(g, x - SIZE / 2 - SIZE / 6, y + SIZE / 2 - SIZE / 4));
+                var cellPanel = new JPanel();
+                cellPanel.setPreferredSize(new Dimension(SIZE, SIZE));
+                cellPanel.setBounds(x - SIZE / 2, y - SIZE / 2, SIZE, SIZE);
+                cellPanel.setOpaque(false);
+                cellPanel.setBackground(new Color(0, 0, 0, 0));
+
+                var organism = foundOrganism.orElse(null);
+                if (organism != null) {
+                  g.setColor(Color.RED);
+                  g.fillPolygon(hex);
+                  g.setColor(Color.BLACK);
+                  g.drawPolygon(hex);
+                  organism.display(g, x - SIZE / 2 - SIZE / 6, y + SIZE / 2 - SIZE / 4, hex);
+                } else {
+                  cellPanel.addMouseListener(
+                      new MouseAdapter() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                          var options = Factory.getClasses();
+                          var comboBox = new JComboBox<>(options);
+                          comboBox.setPreferredSize(new Dimension(100, 30));
+
+                          int option =
+                              JOptionPane.showOptionDialog(
+                                  null,
+                                  comboBox,
+                                  "Select organism to place at this field",
+                                  JOptionPane.DEFAULT_OPTION,
+                                  JOptionPane.PLAIN_MESSAGE,
+                                  null,
+                                  null,
+                                  null);
+
+                          if (option == JOptionPane.OK_OPTION) {
+                            var selectedOrganism = (String) comboBox.getSelectedItem();
+                            if (selectedOrganism != null) {
+                              var newOrganism =
+                                  Factory.create(selectedOrganism, newPos, WorldHexImpl.this);
+                              newOrganism.display(
+                                  g, x - SIZE / 2 - SIZE / 6, y + SIZE / 2 - SIZE / 4, hex);
+                              addOrganism(newOrganism);
+                              message("A new " + selectedOrganism + " was just added by a player!");
+                            }
+                          }
+                        }
+                      });
+                  g.setColor(Color.WHITE);
+                  g.fillPolygon(hex);
+                  g.setColor(Color.BLACK);
+                  g.drawPolygon(hex);
+                }
+                add(cellPanel);
               }
             }
           }
         };
+
+    gridPanel.setLayout(null);
+
     frame.add(gridPanel);
 
     frame.setSize(new Dimension(width * CELL_SIZE + SIZE / 4, height * CELL_SIZE));
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.setVisible(true);
+
+    frame.addKeyListener(
+        new KeyListener() {
+          @Override
+          public void keyTyped(KeyEvent e) {}
+
+          @Override
+          public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+              organisms.removeIf(Organism::isDead);
+
+              final int size = organisms.size();
+              for (int i = 0; i < size; i++) {
+                organisms.get(i).takeTurn();
+              }
+              gridPanel.repaint();
+            }
+          }
+
+          @Override
+          public void keyReleased(KeyEvent e) {}
+        });
 
     /*userInterface = new JPanel();
     userInterface.setPreferredSize(new Dimension(width * CELL_SIZE, height * CELL_SIZE));

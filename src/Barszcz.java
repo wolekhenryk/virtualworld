@@ -45,7 +45,11 @@ public class Barszcz extends Plant {
   }
 
   @Override
-  public void display(Graphics g, int x, int y) {
+  public void display(Graphics g, int x, int y, Polygon p) {
+    g.setColor(Color.WHITE);
+    g.fillPolygon(p);
+    g.setColor(Color.BLACK);
+    g.drawPolygon(p);
     g.drawString("\uD83C\uDF35", x, y);
   }
 

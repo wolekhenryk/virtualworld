@@ -3,17 +3,15 @@ import mdlaf.utils.MaterialColors;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.Random;
+import java.util.Objects;
 
 public class Main {
-
+  static World world;
+  static final String[] OPTIONS = {"SQUARE", "HEX"};
   public static void main(String[] args)
       throws UnsupportedLookAndFeelException, IOException, FontFormatException {
-    var world = new WorldHexImpl();
     UIManager.setLookAndFeel(new MaterialLookAndFeel());
 
     var frame = new JFrame("Henryk Wolek 193399");
@@ -25,12 +23,19 @@ public class Main {
 
     var widthField = new JTextField(10);
     var heightField = new JTextField(10);
+    var comboBox = new JComboBox<>(new DefaultComboBoxModel<>(OPTIONS));
     var submitButton = new JButton("Submit");
 
     submitButton.addActionListener(
         e -> {
           int width = Integer.parseInt(widthField.getText());
           int height = Integer.parseInt(heightField.getText());
+          var worldType = (String) comboBox.getSelectedItem();
+          if (Objects.equals(worldType, OPTIONS[0])) {
+            world = new WorldSquareImpl();
+          } else {
+            world = new WorldHexImpl();
+          }
 
           world.setHeight(height);
           world.setWidth(width);
@@ -64,6 +69,7 @@ public class Main {
     panel.add(widthField);
     panel.add(new JLabel("Height:"));
     panel.add(heightField);
+    panel.add(comboBox);
     panel.add(submitButton);
 
     frame.add(panel);
