@@ -86,7 +86,91 @@ public abstract class World {
     return frame;
   }
 
-  public abstract void saveGameToFile(FileWriter writer) throws IOException;
+  protected void saveGameToFile(FileWriter writer) throws IOException {
+    writer.write(getWidth() + " " + getHeight() + "\n");
+    for (var o : organisms) {
+      if (o instanceof Human human) {
+        writer.write(
+            human.getClass().getSimpleName()
+                + " "
+                + human.getStrength()
+                + " "
+                + human.getInitiative()
+                + " "
+                + human.getAge()
+                + " "
+                + human.getPosition().first()
+                + " "
+                + human.getPosition().second()
+                + " "
+                + human.getSpecialAbilityCooldown()
+                + " "
+                + human.isAbilityActive()
+                + " "
+                + human.getSpecialAbilityDuration()
+                + "\n");
+      } else {
+        writer.write(
+            o.getClass().getSimpleName()
+                + " "
+                + o.getStrength()
+                + " "
+                + o.getInitiative()
+                + " "
+                + o.getAge()
+                + " "
+                + o.getPosition().first()
+                + " "
+                + o.getPosition().second()
+                + "\n");
+      }
+    }
+  }
 
-  public abstract void readFromFile(File reader) throws IOException;
+  protected void readFromFile(File reader) throws IOException {
+    organisms.clear();
+    var scanner = new Scanner(reader);
+
+    String dimensions = scanner.nextLine();
+    var dimensionScanner = new Scanner(dimensions);
+
+    int worldWidth = dimensionScanner.nextInt();
+    int worldHeight = dimensionScanner.nextInt();
+
+    setWidth(worldWidth);
+    setHeight(worldHeight);
+
+    dimensionScanner.close();
+
+    while (scanner.hasNextLine()) {
+      String line = scanner.nextLine();
+      var lineScanner = new Scanner(line);
+
+      String className = lineScanner.next();
+      int strength = lineScanner.nextInt();
+      int initiative = lineScanner.nextInt();
+      int age = lineScanner.nextInt();
+      int iPos = lineScanner.nextInt();
+      int jPos = lineScanner.nextInt();
+
+      var organism = Factory.create(className, new Pair<>(iPos, jPos), this);
+      organism.setStrength(strength);
+      organism.setInitiative(initiative);
+      organism.setAge(age);
+
+      if (organism instanceof Human) {
+        int cooldown = lineScanner.nextInt();
+        boolean isActive = lineScanner.nextBoolean();
+        int duration = lineScanner.nextInt();
+
+        ((Human) organism).setSpecialAbilityCooldown(cooldown);
+        if (isActive) ((Human) organism).activateSpecialAbility();
+        ((Human) organism).setSpecialAbilityDuration(duration);
+      }
+
+      organisms.add(organism);
+    }
+
+    scanner.close();
+  }
 }

@@ -25,6 +25,130 @@ public class WorldHexImpl extends World {
     font = new Font("Segoe UI Emoji", Font.PLAIN, 72);
     regularFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/Kanit-Regular.ttf"));
 
+    userInterface = new JPanel();
+    userInterface.setPreferredSize(new Dimension(width * CELL_SIZE, height * CELL_SIZE));
+    userInterface.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    userInterface.setBackground(MaterialColors.LIGHT_BLUE_50);
+    userInterface.setLayout(new BoxLayout(userInterface, BoxLayout.Y_AXIS));
+    userInterface.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+    var mainLabel = new JLabel("Henryk Wołek 193399");
+    mainLabel.setFont(regularFont.deriveFont(Font.PLAIN, 36));
+    mainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+    userInterface.add(mainLabel);
+
+    userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
+
+    var saveButton = new JButton("Save game");
+    saveButton.setUI(new MaterialButtonUI());
+    saveButton.setFocusable(false);
+    saveButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    userInterface.add(saveButton);
+
+    saveButton.addActionListener(
+        e -> {
+          try (var writer = new FileWriter(FILENAME, false)) {
+            saveGameToFile(writer);
+            writer.close();
+            message("Game state has been successfully saved to file " + FILENAME);
+            gridPanel.removeAll();
+            display_world();
+          } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+            return;
+          }
+        });
+
+    userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
+
+    var loadButton = new JButton("Load game");
+    loadButton.setUI(new MaterialButtonUI());
+    loadButton.setFocusable(false);
+    loadButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+    userInterface.add(loadButton);
+
+    loadButton.addActionListener(
+        e -> {
+          try {
+            var reader = new File(FILENAME);
+            readFromFile(reader);
+            display_world();
+
+          } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+            return;
+          }
+        });
+
+    userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
+
+    logArea = new JTextArea();
+    logArea.setEditable(false);
+    logArea.setFocusable(false);
+    logArea.setLineWrap(true);
+    logArea.setPreferredSize(new Dimension(width * 75, height * 30));
+    logArea.setAlignmentX(Component.CENTER_ALIGNMENT);
+    userInterface.add(logArea);
+
+    splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, gridPanel, userInterface);
+    splitPane.setResizeWeight(0);
+    splitPane.setDividerSize(0);
+    frame.add(splitPane);
+
+    frame.addKeyListener(
+        new KeyListener() {
+          @Override
+          public void keyTyped(KeyEvent e) {}
+
+          @Override
+          public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+              try {
+                gridPanel.removeAll();
+                make_turn();
+                display_world();
+              } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+                return;
+              }
+            }
+          }
+
+          @Override
+          public void keyReleased(KeyEvent e) {}
+        });
+  }
+
+  @Override
+  public void placeOrganism(Class<? extends Organism> classType) {
+    var rand = new Random();
+
+    var newI = rand.nextInt(getHeight());
+    var newJ = rand.nextInt(getWidth());
+    var attemptCounter = 0;
+
+    while (!isFree(newI, newJ) && attemptCounter++ < ATTEMPTS) {
+      newI = rand.nextInt(getHeight());
+      newJ = rand.nextInt(getWidth());
+    }
+
+    if (attemptCounter == ATTEMPTS) return;
+
+    addOrganism(Factory.create(classType, new Pair<>(newI, newJ), this));
+  }
+
+  @Override
+  public boolean isFree(int i, int j) {
+    return organisms.stream().anyMatch(o -> o.getPosition().equals(new Pair<>(i, j)));
+  }
+
+  @Override
+  public void display_world()
+      throws UnsupportedLookAndFeelException, IOException, FontFormatException {
+    UIManager.setLookAndFeel(new MaterialLookAndFeel());
+
+    frame = new JFrame("University of sparkling water");
+
+    font = new Font("Segoe UI Emoji", Font.PLAIN, 72);
+    regularFont = Font.createFont(Font.TRUETYPE_FONT, new File("resources/Kanit-Regular.ttf"));
+
     gridPanel =
         new JPanel() {
           @Override
@@ -111,45 +235,18 @@ public class WorldHexImpl extends World {
         };
 
     gridPanel.setLayout(null);
-
+    gridPanel.setPreferredSize(new Dimension(width * CELL_SIZE + SIZE / 4, height * CELL_SIZE));
     frame.add(gridPanel);
 
-    frame.setSize(new Dimension(width * CELL_SIZE + SIZE / 4, height * CELL_SIZE));
-    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    frame.setVisible(true);
-
-    frame.addKeyListener(
-        new KeyListener() {
-          @Override
-          public void keyTyped(KeyEvent e) {}
-
-          @Override
-          public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-              organisms.removeIf(Organism::isDead);
-
-              final int size = organisms.size();
-              for (int i = 0; i < size; i++) {
-                organisms.get(i).takeTurn();
-              }
-              gridPanel.repaint();
-            }
-          }
-
-          @Override
-          public void keyReleased(KeyEvent e) {}
-        });
-
-    /*userInterface = new JPanel();
-    userInterface.setPreferredSize(new Dimension(width * CELL_SIZE, height * CELL_SIZE));
-    userInterface.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-    userInterface.setBackground(MaterialColors.LIGHT_BLUE_50);
+    userInterface = new JPanel();
+    userInterface.setPreferredSize(new Dimension(width * CELL_SIZE + SIZE / 4, height * CELL_SIZE));
     userInterface.setLayout(new BoxLayout(userInterface, BoxLayout.Y_AXIS));
     userInterface.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     var mainLabel = new JLabel("Henryk Wołek 193399");
     mainLabel.setFont(regularFont.deriveFont(Font.PLAIN, 36));
     mainLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
     userInterface.add(mainLabel);
 
     userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -166,9 +263,9 @@ public class WorldHexImpl extends World {
             saveGameToFile(writer);
             writer.close();
             message("Game state has been successfully saved to file " + FILENAME);
-            gridPanel.removeAll();
-            display_world();
-          } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+            gridPanel.repaint();
+            update_logs();
+          } catch (IOException ex1) {
             return;
           }
         });
@@ -186,9 +283,9 @@ public class WorldHexImpl extends World {
           try {
             var reader = new File(FILENAME);
             readFromFile(reader);
-            gridPanel.removeAll();
-            display_world();
-          } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
+            gridPanel.repaint();
+            update_logs();
+          } catch (IOException ex1) {
             return;
           }
         });
@@ -203,6 +300,8 @@ public class WorldHexImpl extends World {
     logArea.setAlignmentX(Component.CENTER_ALIGNMENT);
     userInterface.add(logArea);
 
+    update_logs();
+
     splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, gridPanel, userInterface);
     splitPane.setResizeWeight(0);
     splitPane.setDividerSize(0);
@@ -216,57 +315,31 @@ public class WorldHexImpl extends World {
           @Override
           public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-              try {
-                gridPanel.removeAll();
-                make_turn();
-                display_world();
-              } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
-                return;
+              organisms.removeIf(Organism::isDead);
+
+              final int size = organisms.size();
+              for (int i = 0; i < size; i++) {
+                organisms.get(i).takeTurn();
               }
+              update_logs();
+              gridPanel.repaint();
             }
           }
 
           @Override
           public void keyReleased(KeyEvent e) {}
-        });*/
+        });
+
+    frame.pack();
+    frame.setLocationRelativeTo(null);
+    frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    frame.setVisible(true);
   }
 
-  @Override
-  public void placeOrganism(Class<? extends Organism> classType) {
-    var rand = new Random();
-
-    var newI = rand.nextInt(getHeight());
-    var newJ = rand.nextInt(getWidth());
-    var attemptCounter = 0;
-
-    while (!isFree(newI, newJ) && attemptCounter++ < ATTEMPTS) {
-      newI = rand.nextInt(getHeight());
-      newJ = rand.nextInt(getWidth());
+  private void update_logs() {
+    logArea.setText("================\n* WORLD LOGS *\n================\n");
+    for (var message : logs) {
+      logArea.append(message + "\n");
     }
-
-    if (attemptCounter == ATTEMPTS) return;
-
-    addOrganism(Factory.create(classType, new Pair<>(newI, newJ), this));
   }
-
-  @Override
-  public boolean isFree(int i, int j) {
-    return organisms.stream().anyMatch(o -> o.getPosition().equals(new Pair<>(i, j)));
-  }
-
-  @Override
-  public void display_world()
-      throws UnsupportedLookAndFeelException, IOException, FontFormatException {
-    UIManager.setLookAndFeel(new MaterialLookAndFeel());
-
-    /*    frame.pack();
-
-    */
-  }
-
-  @Override
-  public void saveGameToFile(FileWriter writer) throws IOException {}
-
-  @Override
-  public void readFromFile(File reader) throws IOException {}
 }
