@@ -20,7 +20,7 @@ public abstract class World {
   protected Font font;
   protected Font regularFont;
   protected KeyListener arrowListener;
-  Deque<String> logs;
+  protected Deque<String> logs;
   protected static final int ATTEMPTS = 10;
   protected static final int CELL_SIZE = 75;
   protected static final int HEX_SIDES = 6;
