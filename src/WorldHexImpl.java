@@ -17,6 +17,10 @@ public class WorldHexImpl extends World {
   private int numCols;
   private final int SIZE = CELL_SIZE / 2;
   private final int HEX_SPACING = 10;
+  private final int[] DELTA_X_ODD_HEX = {0, 1, 1, 1, 0, -1};
+  private final int[] DELTA_Y_ODD_HEX = {-1, -1, 0, 1, 1, 0};
+  private final int[] DELTA_X_EVEN_HEX = {-1, 0, 1, 0, -1, -1};
+  private final int[] DELTA_Y_EVEN_HEX = {-1, -1, 0, 1, 1, 0};
 
   @Override
   public void setGUI() throws IOException, FontFormatException {
@@ -135,6 +139,21 @@ public class WorldHexImpl extends World {
   }
 
   @Override
+  public Pair<Integer, Integer> nextMove(Pair<Integer, Integer> currentPosition) {
+    var random = new Random();
+    var shift = random.nextInt(6);
+
+    var currentI = currentPosition.first();
+    var currentJ = currentPosition.second();
+
+    if (currentI % 2 == 0) {
+      return new Pair<>(currentI + DELTA_Y_EVEN_HEX[shift], currentJ + DELTA_X_EVEN_HEX[shift]);
+    } else {
+      return new Pair<>(currentI + DELTA_Y_ODD_HEX[shift], currentJ + DELTA_X_ODD_HEX[shift]);
+    }
+  }
+
+  @Override
   public boolean isFree(int i, int j) {
     return organisms.stream().anyMatch(o -> o.getPosition().equals(new Pair<>(i, j)));
   }
@@ -185,9 +204,9 @@ public class WorldHexImpl extends World {
 
                 var organism = foundOrganism.orElse(null);
                 if (organism != null) {
-                  g.setColor(Color.RED);
+                  /*g.setColor(Color.RED);
                   g.fillPolygon(hex);
-                  g.setColor(Color.BLACK);
+                  g.setColor(Color.BLACK);*/
                   g.drawPolygon(hex);
                   organism.display(g, x - SIZE / 2 - SIZE / 6, y + SIZE / 2 - SIZE / 4, hex);
                 } else {

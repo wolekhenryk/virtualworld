@@ -25,6 +25,8 @@ public abstract class World {
   protected static final int CELL_SIZE = 75;
   protected static final int HEX_SIDES = 6;
   protected static final String FILENAME = "file_java_game.txt";
+  protected int[] DY = {0, 1, 0, -1};
+  protected int[] DX = {1, 0, -1, 0};
 
   public World() {
     organisms = new ArrayList<>();
@@ -60,6 +62,8 @@ public abstract class World {
   }
 
   public abstract void placeOrganism(Class<? extends Organism> classType);
+
+  public abstract Pair<Integer, Integer> nextMove(Pair<Integer, Integer> currentPosition);
 
   public abstract boolean isFree(int i, int j);
 

@@ -52,7 +52,8 @@ public class Animal extends Organism {
       newJ = currentJ + deltaJ;
     }
 
-    var newPosition = new Pair<>(newI, newJ);
+    var newPosition = world.nextMove(currentPosition);
+    if (invalidCoords(newPosition.first(), newPosition.second())) return;
     var livings = world.getOrganisms();
 
     var foundOrganism =
@@ -110,7 +111,5 @@ public class Animal extends Organism {
   public void display(String content, JPanel panel, JLabel label) {}
 
   @Override
-  public void display(Graphics g, int x, int y, Polygon p) {
-
-  }
+  public void display(Graphics g, int x, int y, Polygon p) {}
 }

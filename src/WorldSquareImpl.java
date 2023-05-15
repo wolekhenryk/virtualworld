@@ -133,6 +133,14 @@ public class WorldSquareImpl extends World {
   }
 
   @Override
+  public Pair<Integer, Integer> nextMove(Pair<Integer, Integer> currentPosition) {
+    var random = new Random();
+    var shift = random.nextInt(4);
+
+    return new Pair<>(currentPosition.first() + DY[shift], currentPosition.second() + DX[shift]);
+  }
+
+  @Override
   public boolean isFree(int i, int j) {
     return organisms.stream().anyMatch(o -> o.getPosition().equals(new Pair<>(i, j)));
   }
