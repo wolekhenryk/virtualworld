@@ -134,7 +134,7 @@ public class WorldHexImpl extends World {
   @Override
   public Pair<Integer, Integer> nextMove(Pair<Integer, Integer> currentPosition) {
     var random = new Random();
-    var shift = random.nextInt(6);
+    var shift = random.nextInt(HEX_SIDES);
 
     var currentI = currentPosition.first();
     var currentJ = currentPosition.second();
@@ -308,6 +308,15 @@ public class WorldHexImpl extends World {
     logArea.setPreferredSize(new Dimension(width * 75, height * 30));
     logArea.setAlignmentX(Component.CENTER_ALIGNMENT);
     userInterface.add(logArea);
+
+    userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
+
+    humanStats = new JTextArea();
+    humanStats.setEditable(false);
+    humanStats.setFocusable(false);
+    humanStats.setLineWrap(true);
+    humanStats.setPreferredSize(new Dimension(width * 75, height * 5));
+    userInterface.add(humanStats);
 
     update_logs();
 

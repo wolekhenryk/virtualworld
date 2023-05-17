@@ -82,9 +82,18 @@ public class WorldSquareImpl extends World {
     logArea.setEditable(false);
     logArea.setFocusable(false);
     logArea.setLineWrap(true);
-    logArea.setPreferredSize(new Dimension(width * 75, height * 30));
+    logArea.setPreferredSize(new Dimension(width * 75, height * 25));
     logArea.setAlignmentX(Component.CENTER_ALIGNMENT);
     userInterface.add(logArea);
+
+    userInterface.add(Box.createRigidArea(new Dimension(0, 10)));
+
+    humanStats = new JTextArea();
+    humanStats.setEditable(false);
+    humanStats.setFocusable(false);
+    humanStats.setLineWrap(true);
+    humanStats.setPreferredSize(new Dimension(width * 75, height * 5));
+    userInterface.add(humanStats);
 
     splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, gridPanel, userInterface);
     splitPane.setResizeWeight(0);

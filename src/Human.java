@@ -89,16 +89,20 @@ public final class Human extends Animal {
           public void keyReleased(KeyEvent e) {}
         };
 
+    displayStats();
+
     if (!hasActivatedKeyListener) getWorld().getFrame().addKeyListener(listener);
 
     if (this.specialAbilityActive) castSpecialAbility();
 
     if (this.specialAbilityDuration == 0 && this.specialAbilityActive) deactivateSpecialAbility();
+
+    if (!this.specialAbilityActive && this.specialAbilityCooldown != 0)
+      this.specialAbilityCooldown--;
   }
 
   private void castSpecialAbility() {
     this.specialAbilityDuration--;
-    getWorld().message("Ability will last for " + specialAbilityDuration + " more rounds");
 
     var livings = getWorld().getOrganisms();
     var currI = getPosition().first();
@@ -116,6 +120,23 @@ public final class Human extends Animal {
 
       foundOrganism.ifPresent(Organism::die);
     }
+  }
+
+  public void displayStats() {
+    getWorld()
+        .humanStats
+        .setText(
+            "Is special ability active? "
+                + (this.specialAbilityActive ? "YES" : "NO")
+                + "\n"
+                + "Special ability duration left: "
+                + (this.specialAbilityActive ? this.specialAbilityDuration : "N/A")
+                + "\n"
+                + "Special ability cooldown left: "
+                + ((!this.specialAbilityActive && this.specialAbilityCooldown != 0)
+                    ? this.specialAbilityCooldown
+                    : "N/A")
+                + "\n");
   }
 
   public void activateSpecialAbility() {
@@ -150,6 +171,6 @@ public final class Human extends Animal {
   }
 
   public int getSpecialAbilityCooldown() {
-    return this.specialAbilityDuration;
+    return this.specialAbilityCooldown;
   }
 }

@@ -17,6 +17,7 @@ public abstract class World {
   protected JPanel userInterface;
   protected JSplitPane splitPane;
   protected JTextArea logArea;
+  protected JTextArea humanStats;
   protected Font font;
   protected Font regularFont;
   protected KeyListener arrowListener;
@@ -26,6 +27,8 @@ public abstract class World {
   protected static final int HEX_SIDES = 6;
   protected static final int UI_WIDTH = 400;
   protected static final String FILENAME = "file_java_game.txt";
+  protected static final String SQUARE_TYPE = "SQUARE";
+  protected static final String HEX_TYPE = "HEX";
   protected int[] DY = {0, 1, 0, -1};
   protected int[] DX = {1, 0, -1, 0};
 
@@ -161,7 +164,8 @@ public abstract class World {
     try {
       frame.dispose();
       setGUI();
-    } catch (FontFormatException e) {
+      display_world();
+    } catch (FontFormatException | UnsupportedLookAndFeelException e) {
       throw new RuntimeException(e);
     }
 
@@ -191,6 +195,12 @@ public abstract class World {
         ((Human) organism).setSpecialAbilityCooldown(cooldown);
         if (isActive) ((Human) organism).activateSpecialAbility();
         ((Human) organism).setSpecialAbilityDuration(duration);
+
+        ((Human) organism).displayStats();
+
+        System.out.println("Cooldown is " + cooldown);
+        System.out.println("Ability is active " + isActive);
+        System.out.println("Duration is " + duration);
       }
 
       organisms.add(organism);
