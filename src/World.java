@@ -24,6 +24,7 @@ public abstract class World {
   protected static final int ATTEMPTS = 10;
   protected static final int CELL_SIZE = 75;
   protected static final int HEX_SIDES = 6;
+  protected static final int UI_WIDTH = 400;
   protected static final String FILENAME = "file_java_game.txt";
   protected int[] DY = {0, 1, 0, -1};
   protected int[] DX = {1, 0, -1, 0};
@@ -44,12 +45,25 @@ public abstract class World {
   public abstract void setGUI() throws IOException, FontFormatException;
 
   public void make_turn() {
-    organisms.removeIf(Organism::isDead);
+    var comparator =
+        new Comparator<Organism>() {
+          public int compare(Organism o1, Organism o2) {
+            if (o1.getInitiative() != o2.getInitiative()) {
+              return Integer.compare(o1.getInitiative(), o2.getInitiative());
+            } else {
+              return Integer.compare(o1.getAge(), o2.getAge());
+            }
+          }
+        };
+
+    organisms.sort(comparator);
 
     final int size = organisms.size();
     for (int i = 0; i < size; i++) {
       organisms.get(i).takeTurn();
     }
+
+    organisms.removeIf(Organism::isDead);
   }
 
   public void message(String msg) {
@@ -143,6 +157,13 @@ public abstract class World {
 
     setWidth(worldWidth);
     setHeight(worldHeight);
+
+    try {
+      frame.dispose();
+      setGUI();
+    } catch (FontFormatException e) {
+      throw new RuntimeException(e);
+    }
 
     dimensionScanner.close();
 

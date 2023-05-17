@@ -126,16 +126,9 @@ public class WorldHexImpl extends World {
 
     var newI = rand.nextInt(getHeight());
     var newJ = rand.nextInt(getWidth());
-    var attemptCounter = 0;
 
-    while (!isFree(newI, newJ) && attemptCounter++ < ATTEMPTS) {
-      newI = rand.nextInt(getHeight());
-      newJ = rand.nextInt(getWidth());
-    }
-
-    if (attemptCounter == ATTEMPTS) return;
-
-    addOrganism(Factory.create(classType, new Pair<>(newI, newJ), this));
+    if (organisms.stream().noneMatch(o -> o.getPosition().equals(new Pair<>(newI, newJ))))
+      addOrganism(Factory.create(classType, new Pair<>(newI, newJ), this));
   }
 
   @Override
@@ -204,9 +197,6 @@ public class WorldHexImpl extends World {
 
                 var organism = foundOrganism.orElse(null);
                 if (organism != null) {
-                  /*g.setColor(Color.RED);
-                  g.fillPolygon(hex);
-                  g.setColor(Color.BLACK);*/
                   g.drawPolygon(hex);
                   organism.display(g, x - SIZE / 2 - SIZE / 6, y + SIZE / 2 - SIZE / 4, hex);
                 } else {
@@ -258,7 +248,7 @@ public class WorldHexImpl extends World {
     frame.add(gridPanel);
 
     userInterface = new JPanel();
-    userInterface.setPreferredSize(new Dimension(width * CELL_SIZE + SIZE / 4, height * CELL_SIZE));
+    userInterface.setPreferredSize(new Dimension(UI_WIDTH, height * CELL_SIZE));
     userInterface.setLayout(new BoxLayout(userInterface, BoxLayout.Y_AXIS));
     userInterface.setAlignmentX(Component.CENTER_ALIGNMENT);
 

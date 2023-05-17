@@ -94,13 +94,30 @@ public class Animal extends Organism {
         var prevPos = this.getPosition();
         other.setPosition(prevPos);
         getWorld()
-            .message(other.getClass().getSimpleName() + " ate " + this.getClass().getSimpleName());
+            .message(
+                other.getClass().getSimpleName()
+                    + " ate "
+                    + this.getClass().getSimpleName()
+                    + " at ["
+                    + this.getPosition().first()
+                    + ", "
+                    + this.getPosition().second()
+                    + "]");
       } else if (other.getStrength() < this.getStrength()) {
-        other.die();
+        var x = (Animal) other;
+        x.die();
         var prevPos = other.getPosition();
         this.setPosition(prevPos);
         getWorld()
-            .message(this.getClass().getSimpleName() + " ate " + other.getClass().getSimpleName());
+            .message(
+                this.getClass().getSimpleName()
+                    + " ate "
+                    + other.getClass().getSimpleName()
+                    + " at ["
+                    + this.getPosition().first()
+                    + ", "
+                    + this.getPosition().second()
+                    + "]");
       }
     } else if (other instanceof Plant) {
       ((Plant) other).takeEffect(this);

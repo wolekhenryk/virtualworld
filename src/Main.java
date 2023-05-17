@@ -10,6 +10,7 @@ import java.util.Objects;
 public class Main {
   static World world;
   static final String[] OPTIONS = {"SQUARE", "HEX"};
+
   public static void main(String[] args)
       throws UnsupportedLookAndFeelException, IOException, FontFormatException {
     UIManager.setLookAndFeel(new MaterialLookAndFeel());
@@ -43,22 +44,19 @@ public class Main {
           frame.dispose();
 
           try {
-            world.setGUI();
-
+            world.placeOrganism(Human.class);
             world.placeOrganism(Barszcz.class);
             world.placeOrganism(Fox.class);
+            world.placeOrganism(Nightshade.class);
             world.placeOrganism(Gazelle.class);
             world.placeOrganism(Grass.class);
-            world.placeOrganism(Grass.class);
-            world.placeOrganism(Guarana.class);
             world.placeOrganism(Guarana.class);
             world.placeOrganism(Mlecz.class);
-            world.placeOrganism(Nightshade.class);
             world.placeOrganism(Sheep.class);
             world.placeOrganism(Tortoise.class);
             world.placeOrganism(Wolf.class);
-            world.placeOrganism(Human.class);
 
+            world.setGUI();
             world.display_world();
           } catch (UnsupportedLookAndFeelException | IOException | FontFormatException ex1) {
             return;

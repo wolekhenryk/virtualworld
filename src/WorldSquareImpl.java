@@ -24,7 +24,7 @@ public class WorldSquareImpl extends World {
     frame.add(gridPanel);
 
     userInterface = new JPanel();
-    userInterface.setPreferredSize(new Dimension(width * CELL_SIZE, height * CELL_SIZE));
+    userInterface.setPreferredSize(new Dimension(UI_WIDTH, height * CELL_SIZE));
     userInterface.setBorder(BorderFactory.createLineBorder(Color.BLACK));
     userInterface.setBackground(MaterialColors.LIGHT_BLUE_50);
     userInterface.setLayout(new BoxLayout(userInterface, BoxLayout.Y_AXIS));
@@ -120,16 +120,9 @@ public class WorldSquareImpl extends World {
 
     var newI = rand.nextInt(getHeight());
     var newJ = rand.nextInt(getWidth());
-    var attemptCounter = 0;
 
-    while (!isFree(newI, newJ) && attemptCounter++ < ATTEMPTS) {
-      newI = rand.nextInt(getHeight());
-      newJ = rand.nextInt(getWidth());
-    }
-
-    if (attemptCounter == ATTEMPTS) return;
-
-    addOrganism(Factory.create(classType, new Pair<>(newI, newJ), this));
+    if (organisms.stream().noneMatch(o -> o.getPosition().equals(new Pair<>(newI, newJ))))
+      addOrganism(Factory.create(classType, new Pair<>(newI, newJ), this));
   }
 
   @Override

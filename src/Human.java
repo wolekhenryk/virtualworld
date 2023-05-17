@@ -37,6 +37,9 @@ public final class Human extends Animal {
 
   @Override
   public void takeTurn() {
+    if (this.isDead()) {
+      getWorld().frame.removeKeyListener(listener);
+    }
     listener =
         new KeyListener() {
 
@@ -124,6 +127,10 @@ public final class Human extends Animal {
     this.specialAbilityActive = false;
     this.specialAbilityCooldown = 5;
     getWorld().message("Ability deactivated, cooldown is now 5 rounds");
+  }
+
+  public void removeHumanListener() {
+    getWorld().frame.removeKeyListener(listener);
   }
 
   public boolean isAbilityActive() {
